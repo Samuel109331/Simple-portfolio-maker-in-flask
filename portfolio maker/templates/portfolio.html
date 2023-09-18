@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My portfolio</title>
+    <style>
+
+@font-face {
+    font-family: myfont;
+    
+    src: url("MotleyForcesRegular-w1rZ3.ttf");
+}
+* {
+    font-family: myfont;
+    user-select: none;
+}
+body {
+    width: 100vw;
+   
+    overflow: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    background-color: #49604c;
+}
+.nav-bar {
+    width: 100vw;
+    height: auto;
+    padding: 5px;
+    background-color: black;
+    display: flex;
+    position: fixed;
+}
+.nav-bar ul {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+
+}
+a {
+    text-decoration: none;
+    font-size: 17px;
+    color: #fff;
+    
+}
+.content {
+    /* width: 100vw;
+    height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+.content div {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+ p {
+    margin-left: 2%;
+    font-size: 18px;
+ }
+
+::-webkit-scrollbar {
+    background-color: transparent;
+}
+::-webkit-scrollbar-button {
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #000;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+#projects-list {
+    height: 30vh;
+    overflow: scroll;
+}
+.icon {
+width: 20px;
+}
+
+@media (max-width:768px) {
+    * {
+        font-size: 16px;
+    }
+   #links {
+    width: auto;
+    height: auto;
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    white-space: nowrap;
+    background-color: #030703;
+    padding: 10px;
+   }
+   #links li {
+    margin: 3%;
+   }
+   .nav-bar::after {
+    content: "Info";
+    color: #FFF;
+   }
+   .nav-bar:hover #links {
+    display: flex;
+   }
+}
+    </style>
+</head>
+<body>
+    <div class="nav-bar">
+
+        <ul id="links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about-me">About me</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact me</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <div id="home">
+            <img src="{{img}}" alt="" width="100" height="100" style="border-radius: 50%;">
+            <h1>{{name}}</h1>
+            <p>{{job}}</p>
+        </div>
+        <div id="about-me">
+            {{aboutme}}
+        </div>
+        <div id="skills">
+            <h1>Skills</h1>
+                <ul>
+                {% for i in skills %}
+                    <li>{{ i }}</li>
+                {% endfor %}
+                </ul>
+        </div>
+        <div id="projects">
+            <h1>My projects</h1>
+            <ol id="projects-list">
+                    <input type="hidden" id="git" value="{{githubusername}}">
+            </ol>
+        </div>
+        <div id="contact">
+            <h1>My contact info</h1>
+            <ul style="list-style-type: none;">
+                {% for i,j in contacts.items() %}
+                    <li><a href="{{j}}" target="_blank"> {{i}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script>
+window.addEventListener("DOMContentLoaded",() => {
+    var url = `https://api.github.com/users/${document.querySelector("#git").value}/repos`
+    fetch(url)
+    .then(res => res.json())
+    .then((data) => {
+        // alert(data.length)
+        for (let i = 0; i < data.length; i++ ) {
+        document.querySelector("#projects-list").innerHTML += `
+            <li>
+            <a href="${data[i].html_url}" target="_blank">${data[i].name} </a>
+            </li>
+        `
+        }
+    })
+})
+    </script>
+</body>
+</html>
